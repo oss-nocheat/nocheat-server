@@ -24,6 +24,9 @@ def index():
     hello world!
     '''
 
+@app.route('/play_sample')
+def play_sample():
+    socketio.emit('play')
 
 if __name__ == '__main__':
     socketio.run(app)
