@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
+from StudentClient import StudentClient
 
 # initialize flask app
 app = Flask(__name__)
@@ -14,7 +15,6 @@ student_clients = list()
 @socketio.on('message')
 def handle_client_connect(data):
     print(f'client {data} connected')
-
     student_clients.append(StudentClient(data))
 
 
@@ -23,11 +23,6 @@ def index():
     return '''
     hello world!
     '''
-
-
-class StudentClient:
-    def __init__(self, socket_id):
-        self.socket_id = socket_id
 
 
 if __name__ == '__main__':
