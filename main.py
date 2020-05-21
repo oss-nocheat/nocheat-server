@@ -1,29 +1,35 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 
+# initialize flask app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
+# initialize socket io
 socketio = SocketIO(app, cors_allowed_origins="*")
+# connected student object list
+student_clients = list()
 
-@socketio.on('my event')
-def handle_my_custom_event(json):
-    print('received json: ' + str(json))
 
+# when client connected
 @socketio.on('message')
-def handle_message(message):
-    print('received message: ' + message)
+def handle_client_connect(data):
+    print(f'client {data} connected')
+
+    student_clients.append(StudentClient(data))
+
 
 @app.route('/')
 def index():
     return '''
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-<script type="text/javascript" charset="utf-8">
-    var socket = io();
-    socket.on('connect', function() {
-        socket.emit('my event', {data: 'Im connected!'});
-    });
-</script>
+    hello world!
     '''
+
+
+class StudentClient:
+    def __init__(self, socket_id):
+        self.socket_id = socket_id
+
 
 if __name__ == '__main__':
     socketio.run(app)
+
