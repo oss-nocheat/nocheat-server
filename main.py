@@ -1,11 +1,12 @@
 from flask import Flask, request
 from flask_socketio import SocketIO
-
+from flask_cors import CORS
 from Exam import Exam
 from Student import Student
 
 # initialize flask app
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'secret!'
 # initialize socket io
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -25,6 +26,7 @@ def handle_connect(data):
     else:
         student = Student(request.sid, data['id'], data['name'])
         clients.append(student)
+        socketio.send({'id': id(student)}, sid=request.sid)
     print(request.sid)
     print(clients)
 
@@ -58,7 +60,13 @@ def create_exam():
         return {"message": "Insufficient data"}, 400
     exam = Exam(instructor, name)
     exams.append(exam)
+    socketio.emit("exam_update")
     return {'id': id(exam)}
+
+
+@app.route('/exam', methods=['GET'])
+def get_exams():
+    return {"result": [{'id': id(exam), 'name': exam.name, 'instructor': exam.instructor} for exam in exams]}
 
 
 @app.route('/exam/<exam_id>', methods=['GET'])
