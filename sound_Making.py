@@ -11,6 +11,8 @@ tlen = 10  # s
 Ts = 1 / Fs  # sampling interval
 t = np.arange(0, tlen, Ts)  # time array
 
+student_cnt = 50 # number of student(connect to client's)
+
 # generate signal
 sin_freq = 440  # Hz
 sin_freq3 = 880 #Hz
