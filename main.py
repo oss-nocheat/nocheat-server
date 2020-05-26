@@ -11,7 +11,7 @@ app.config['SECRET_KEY'] = 'secret!'
 # initialize socket io
 socketio = SocketIO(app, cors_allowed_origins="*")
 # connected student object list
-clients = list()
+clients = []
 # exam list
 exams = []
 
@@ -21,14 +21,44 @@ exams = []
 def handle_connect(data):
     for student in clients:
         if student.session_id == request.sid:
-            socketio.send({'id': id(student)}, sid=request.sid)
-            return
+            student.name = data['name']
+            student.student_id = data['id']
+            print(f'client regestered: {request.sid}')
+            socketio.emit('success', {'id': id(student), 'message': f'client regestered: {id(student)}'},
+                          sid=request.sid)
+            break
     else:
         student = Student(request.sid, data['id'], data['name'])
         clients.append(student)
-        socketio.send({'id': id(student)}, sid=request.sid)
-    print(request.sid)
-    print(clients)
+        socketio.emit('success', {'id': id(student), 'message': f'client regestered: {id(student)}'}, sid=request.sid)
+        print(f'client regestered: {request.sid}')
+
+
+@socketio.on('exam_join')
+def join_session(data):
+    client = find_client_by_socketid(clients, request.sid)
+    print(client)
+    if not client:
+        print(f'client {request.sid} not found')
+        socketio.emit('fail', {'message': f'client {request.sid} not found'}, sid=request.sid)
+        return
+    exam_id = data['examId']
+    exam = find_exam_by_id(exams, exam_id)
+    if exam:
+        exam.examinee.append(client)
+        socketio.emit('success', {'id': exam_id}, sid=request.sid)
+        print(f'client {request.sid} regestered to exam {exam.name}')
+        socketio.emit("exam_update")
+        return
+    else:
+        socketio.emit('fail', {'message': f'exam {exam_id} not found'}, sid=request.sid)
+        print(f'exam {exam_id} not found')
+        return
+
+
+@app.route('/client', methods=['GET'])
+def get_clients():
+    return {'result': [client.__dict__ for client in clients]}
 
 
 @app.route('/')
@@ -66,7 +96,10 @@ def create_exam():
 
 @app.route('/exam', methods=['GET'])
 def get_exams():
-    return {"result": [{'id': id(exam), 'name': exam.name, 'instructor': exam.instructor} for exam in exams]}
+    return {
+        "result": [{'id': id(exam), 'name': exam.name, 'instructor': exam.instructor,
+                    'examinee': str([item.name for item in exam.examinee])}
+                   for exam in exams]}
 
 
 @app.route('/exam/<exam_id>', methods=['GET'])
@@ -82,7 +115,7 @@ def get_exam(exam_id):
 def get_examinees(exam_id):
     exam = find_exam_by_id(exams, exam_id)
     if exam:
-        return exam['examinees']
+        return {'result': [examinee.__dict__ for examinee in exam.examinee]}
     else:
         return {"message": "Entry not found"}, 404
 
@@ -90,18 +123,27 @@ def get_examinees(exam_id):
 @app.route('/exam/<exam_id>/join', methods=['POST'])
 def join_exam(exam_id):
     exam = find_exam_by_id(exams, exam_id)
-
     if exam:
         json_data = request.json
         exam.examinee.append()
+        socketio.emit("exam_update")
+        return {"message": f'joined to {id(exam)}'}
     else:
         return {"message": "Entry not found"}, 404
 
 
-def find_exam_by_id(exams, id):
+def find_exam_by_id(exams, exam_id):
+    print(exams)
     for exam in exams:
-        if id(exam) == id:
+        print(f'{id(exam)} == {exam_id} | {id(exam) == exam_id}')
+        if str(id(exam)) == exam_id:
             return exam
+
+
+def find_client_by_socketid(clients, socket_id):
+    for student in clients:
+        if student.session_id == socket_id:
+            return student
 
 
 if __name__ == '__main__':
