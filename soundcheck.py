@@ -16,8 +16,6 @@ class Soundcheck:
                 for j in range(len(makefreq)) : 
                     if freq[i]  <= makefreq[j] * 1.0005 and freq[i] >= makefreq[j] * 0.0095:
                         self.cnt+=1
-                        print('<')
-                        print(freq[i])
                         break
         if len(makefreq) == self.cnt :
             self.cheatcnt+=1 
