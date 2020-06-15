@@ -1,60 +1,7 @@
 import numpy as np
-import pylab
-from scipy.io.wavfile import write
-import os
-
-
-def generate_sound():
-    # sampling rate
-    Fs = 44100.0  # Hz
-    # play length
-    tlen = 5  # s
-    Ts = 1 / Fs  # sampling interval
-    t = np.arange(0, tlen, Ts)  # time array
-
-    # generate signal
-    sin_freq = 8800  # Hz
-    sin_freq2 = 15000  # Hz
-    sin_freq_max = 22000  # to make Hz people cannot hear
-
-    Hz_array = [8800, 15000, 22000]
-
-    # to make sinwaves
-    signal = np.sin(2 * np.pi * sin_freq * t)
-    signal2 = np.sin(2 * np.pi * sin_freq2 * t)
-    signal_max = np.sin(2 * np.pi * sin_freq_max * t)
-
-    # combine sinwaves
-    signal_n = 10000 * signal + 10000 * signal2 + 10000000 * signal_max
-
-    # fft
-    signal_fft = np.fft.fft(signal_n)
-    signal_freq = np.fft.fftfreq(len(t), Ts)
-    print(signal_fft)
-
-    # plot
-    #pylab.plot(signal_freq, np.log10(np.abs(signal_fft)))
-    #pylab.xlim(0, Fs / 2)
-    #pylab.show()
-
-    # save as wav file
-    scaled = np.int16(signal_n / np.max(np.abs(signal_n)) * 32767)
-    write('signal.wav', 44100, scaled)
-
-    return Hz_array
-
-    # play wav file
-    #os.system("start signal.wav")
-
-#generate_sound()
-#os.system("start signal.wav")
-
 import hashlib
-import re
-
-#makeSound 함수: 1개의 output 소리를 만들때 필요한 정보를 생성함
-#                input-key(string): 해시 암호화의 키값으로 쓰일 값
-#                output- result(list): 2차원 리스트. list[0]: 소리의 개수(int), list[1]:소리의 크기비율(list), list[2]: 소리의 주파수(list)
+import os
+from scipy.io.wavfile import write
 
 def makeSound(key):
   #sound_count: 소리의 개수! int형
@@ -97,3 +44,66 @@ def makeSound(key):
 
   print(result)
   return result
+
+def generate_sound(total_cnt):
+
+    list = makeSound(5)
+    # sampling rate
+    Fs = 44100.0  # Hz
+    # play length
+    tlen = 5  # s
+    Ts = 1 / Fs  # sampling interval
+    t = np.arange(0, tlen, Ts)  # time array
+    temp = []
+
+    for i in range(0, list[0]):
+        temp[i] = np.sin(2 * np.pi * list[2][i] * t)
+
+    for i in range(0, list[0]):
+        signal = signal + list[1][i] * temp[i]
+
+    # generate signal
+    #sin_freq = 8800  # Hz
+    #sin_freq2 = 15000  # Hz
+    #sin_freq_max = 22000  # to make Hz people cannot hear
+
+    #Hz_array = [8800, 15000, 22000]
+
+    # to make sinwaves
+    #signal = np.sin(2 * np.pi * sin_freq * t)
+    #signal2 = np.sin(2 * np.pi * sin_freq2 * t)
+    #signal_max = np.sin(2 * np.pi * sin_freq_max * t)
+
+    # combine sinwaves
+   # signal_n = 10000 * signal + 10000 * signal2 + 10000000 * signal_max
+
+    # fft
+    signal_fft = np.fft.fft(signal)
+    signal_freq = np.fft.fftfreq(len(t), Ts)
+    #print(signal_fft)
+
+    # plot
+    pylab.plot(signal_freq, np.log10(np.abs(signal_fft)))
+    pylab.xlim(0, Fs / 2)
+    pylab.show()
+
+    # save as wav file
+    scaled = np.int16(signal / np.max(np.abs(signal)) * 32767)
+    write('signal.wav', 44100, scaled)
+
+    return list[2]
+
+    # play wav file
+    #os.system("start signal.wav")
+
+generate_sound()
+os.system("start signal.wav")
+
+
+import re
+
+#makeSound 함수: 1개의 output 소리를 만들때 필요한 정보를 생성함
+#                input-key(string): 해시 암호화의 키값으로 쓰일 값
+#                output- result(list): 2차원 리스트. list[0]: 소리의 개수(int), list[1]:소리의 크기비율(list), list[2]: 소리의 주파수(list)
+
+
