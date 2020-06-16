@@ -10,7 +10,7 @@ class Soundcheck:
         self.cnt = 0
         self.cheatcnt = 0
 
-    def soundanalysis(self, freq, signal_f, makefreq, makedb):
+    def soundanalyzer(self, freq, signal_f, makefreq, makedb):
         flag = 0
         dbsum = 0
         datacnt = 0

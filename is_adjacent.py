@@ -8,7 +8,7 @@ from soundcheck import Soundcheck
 import wave
 import matplotlib.pyplot as plt
 
-def is_adjacent(sound, makefreq, makedb, f) :
+def check_adjacent(sound, makefreq, makedb, f) :
     
     fs, data = scipy.io.wavfile.read(sound)
 
