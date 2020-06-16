@@ -13,7 +13,7 @@ def find_mic_index():
 def record():
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
-    RATE = 16000
+    RATE = 44100
     CHUNK = 1024
     RECORD_SECONDS = 11
     WAVE_OUTPUT_FILENAME = "record1.wav"
@@ -50,6 +50,6 @@ def record():
 
     return WAVE_OUTPUT_FILENAME
 
-record()
-os.system("start record1.wav")
+#record()
+#os.system("start record1.wav")
 
