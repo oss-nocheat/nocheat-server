@@ -16,5 +16,5 @@ def check_adjacent(sound, makefreq, makedb, f) :
 
     freq = np.linspace(0, fs, len(20*np.log10(np.abs(signal_f))))
 
-    f.soundanalysis(freq, signal_f, makefreq, makedb)
+    f.soundanalyzer(freq, signal_f, makefreq, makedb)
 
