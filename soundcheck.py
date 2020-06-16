@@ -10,12 +10,12 @@ class Soundcheck:
         self.cnt = 0
         self.cheatcnt = 0
 
-    def soundanalysis(self, freq, signal_f, makefreq):
+    def soundanalysis(self, freq, signal_f, makefreq, makedb):
         flag = 0
         for i in range(len(freq)) :
             if (20*np.log10(np.abs(signal_f[i]))) >= 109 :
                 for j in range(len(makefreq)) : 
-                    if freq[i]  <= makefreq[j] * 1.00005 and freq[i] >= makefreq[j] * 0.99995:
+                    if freq[i]  <= makefreq[j] * 1.00005 and freq[i] >= makefreq[j] * 0.99995 and (20*np.log10(np.abs(signal_f[i]))) <= makedb[j]* 1.2 and (20*np.log10(np.abs(signal_f[i]))) >= (20*np.log10(np.abs(signal_f[i]))) :
                         flag = 1
                         print(freq[i])
                     else :
