@@ -14,6 +14,9 @@ def makeSound(key):
     # sound_size: 소리의 크기 비율! list형
     # sound_hz: 소리의 주파수! list형
     # result: 위 세개를 순서대로 넣은 output 값
+    # makeSound 함수: 1개의 output 소리를 만들때 필요한 정보를 생성함
+    #                input-key(string): 해시 암호화의 키값으로 쓰일 값
+    #                output- result(list): 2차원 리스트. list[0]: 소리의 개수(int), list[1]:소리의 크기비율(list), list[2]: 소리의 주파수(list)
 
     sound_size_ratio = []
     sound_hz = []
@@ -64,35 +67,20 @@ def generate_sound():
     temp = []
     arr = [[0] * list[0] for _ in range(300000)]
 
-    a = np.sin(2 * np.pi * list[2][0] * t)
-    pprint(a)
+    #a = np.sin(2 * np.pi * list[2][0] * t)
+    #pprint(a)
 
+    # to make sinwaves
     i = 0
     for i in range(0, list[0]):
         arr[i] = np.sin(2 * np.pi * list[2][i] * t)
         i = i+1
 
+    # to combine sinwaves
     signal = 0
     i = 0
     for i in range(0, list[0]):
         signal = signal + 1000*list[1][i] * arr[i]
-
-    # generate signal
-    # sin_freq = 8800  # Hz
-    # sin_freq2 = 15000  # Hz
-    sin_freq_max = 22000  # to make Hz people cannot hear
-
-    # Hz_array = [8800, 15000, 22000]
-
-    # to make sinwaves
-    # signal = np.sin(2 * np.pi * sin_freq * t)
-    # signal2 = np.sin(2 * np.pi * sin_freq2 * t)
-    signal_max = np.sin(2 * np.pi * sin_freq_max * t)
-
-    signal = signal + 10000000*signal_max
-
-    # combine sinwaves
-    # signal_n = 10000 * signal + 10000 * signal2 + 10000000 * signal_max
 
     # fft
     signal_fft = np.fft.fft(signal)
@@ -108,18 +96,13 @@ def generate_sound():
     scaled = np.int16(signal / np.max(np.abs(signal)) * 32767)
     write('signal.wav', 44100, scaled)
 
-    return list[2]
+    return list
 
     # play wav file
     # os.system("start signal.wav")
 
-generate_sound()
-os.system("start signal.wav")
+#generate_sound()
 
-import re
 
-# makeSound 함수: 1개의 output 소리를 만들때 필요한 정보를 생성함
-#                input-key(string): 해시 암호화의 키값으로 쓰일 값
-#                output- result(list): 2차원 리스트. list[0]: 소리의 개수(int), list[1]:소리의 크기비율(list), list[2]: 소리의 주파수(list)
 
 
