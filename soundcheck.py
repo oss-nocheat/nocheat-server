@@ -10,16 +10,42 @@ class Soundcheck:
         self.cnt = 0
         self.cheatcnt = 0
 
-    def soundanalysis(self, freq, signal_f, makefreq):
+    def soundanalyzer(self, freq, signal_f, makefreq, makedb):
+        flag = 0
+        dbsum = 0
+        datacnt = 0
+        dbmeanarray = []
         for i in range(len(freq)) :
-            if (20*np.log10(np.abs(signal_f[i]))) >= 100 :
+            if (20*np.log10(np.abs(signal_f[i]))) >= 109 :
                 for j in range(len(makefreq)) : 
-                    if freq[i]  <= makefreq[j] * 1.00005 and freq[i] >= makefreq[j] * 0.99995:
-                        i = i+100
-                        self.cnt+=1
-                        break
+                        flag = 1
+                    if freq[i]  <= makefreq[j] * 1.00005 and freq[i] >= makefreq[j] * 0.99995  :
+                        dbsum = dbsum + 20*np.log10(np.abs(signal_f[i]))
+                        datacnt = datacnt + 1
+                    else :
+                        print(freq[i])
+                        if flag == 1 :
+                            self.cnt+=1   
+                            flag = 0
+                            dbmeanarray.append(dbsum/datacnt)
+                            datacnt = 0
+                            dbsum = 0
+                            break
         if len(makefreq) == self.cnt :
-            self.cheatcnt+=1 
+            flagt = 0
+            for i in range(len(makefreq)) :
+                for j in range(i+1 ,len(makefreq)) :
+                    if makefreq[i] <= makefreq[j] and dbmeanarray[i] <= dbmeanarray[j] :
+                        continue
+                    elif makefreq[i] >= makefreq[j] and dbmeanarray[i] >=dbmeanarray[j] :
+                        continue
+                        flagt = 1
+                    else :
+                        break
+                if flagt == 1 :
+                    break
+            if flagt == 0 :
+                self.cheatcnt+=1 
     
     def cntzero(self):
         self.cnt = 0
