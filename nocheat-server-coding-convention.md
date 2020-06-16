@@ -2,7 +2,7 @@ Coding convention rule for python
 ==================================
 follows PEP 8 python style guid
 
-1. Code Lay-out
+#1. Code Lay-out
 ----------------
 ##Indentation
 Use 4 spaces per indentation level
