@@ -10,27 +10,33 @@ class Soundcheck:
         self.cnt = 0
         self.cheatcnt = 0
 
-    def soundanalyzer(self, freq, signal_f, makefreq, makedb):
-        flag = 0
+    def soundanalysis(self, freq, signal_f, makefreq, makedb):
+        flag = -1
         dbsum = 0
         datacnt = 0
         dbmeanarray = []
         for i in range(len(freq)) :
-            if (20*np.log10(np.abs(signal_f[i]))) >= 109 :
-                for j in range(len(makefreq)) : 
-                        flag = 1
+            if (20*np.log10(np.abs(signal_f[i]))) >= 70 :
+                for j in range(self.cnt, len(makefreq)) : 
+
+                    print(freq[i], makefreq[j], flag, self.cnt)
                     if freq[i]  <= makefreq[j] * 1.00005 and freq[i] >= makefreq[j] * 0.99995  :
+                        flag = j
                         dbsum = dbsum + 20*np.log10(np.abs(signal_f[i]))
                         datacnt = datacnt + 1
+                        print(freq[i], makefreq[j])
+                        os.system("Pause")
                     else :
-                        print(freq[i])
-                        if flag == 1 :
+                        if flag != -1 :
                             self.cnt+=1   
-                            flag = 0
-                            dbmeanarray.append(dbsum/datacnt)
+                            if datacnt != 0 :
+                                dbmeanarray.append(dbsum/datacnt)
+                            flag = -1
                             datacnt = 0
                             dbsum = 0
-                            break
+                            os.system("Pause")
+                            
+
         if len(makefreq) == self.cnt :
             flagt = 0
             for i in range(len(makefreq)) :
@@ -39,8 +45,8 @@ class Soundcheck:
                         continue
                     elif makefreq[i] >= makefreq[j] and dbmeanarray[i] >=dbmeanarray[j] :
                         continue
-                        flagt = 1
                     else :
+                        flagt = 1
                         break
                 if flagt == 1 :
                     break
