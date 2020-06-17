@@ -63,5 +63,3 @@ class Soundcheck:
 
     def cheatcntvalue(self):
         return self.cheatcnt
-
-
