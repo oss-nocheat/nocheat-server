@@ -4,21 +4,22 @@ from flask_cors import CORS
 from Exam import Exam
 from Student import Student
 
-# initialize flask app
+# Initialize flask app
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'secret!'
-# initialize socket io
+# Initialize socket io
 socketio = SocketIO(app, cors_allowed_origins="*")
-# connected student object list
+# Connected student object list
 clients = []
-# exam list
+# Exam list
 exams = []
 
 
-# when client connected
+# When client connected
 @socketio.on('register')
 def handle_connect(data):
+    
     for student in clients:
         if student.session_id == request.sid:
             student.name = data['name']
@@ -36,6 +37,7 @@ def handle_connect(data):
 
 @socketio.on('exam_join')
 def join_session(data):
+    
     client = find_client_by_socketid(clients, request.sid)
     print(client)
     if not client:
@@ -58,11 +60,13 @@ def join_session(data):
 
 @app.route('/client', methods=['GET'])
 def get_clients():
+    
     return {'result': [client.__dict__ for client in clients]}
 
 
 @app.route('/')
 def index():
+    
     return '''
     hello world!
     '''
@@ -70,6 +74,7 @@ def index():
 
 @app.route('/play_sample')
 def play_sample():
+    
     socketio.emit('play', [[392.00, 1000],
                            [392.00, 1000],
                            [440, 1000],
@@ -82,6 +87,7 @@ def play_sample():
 
 @app.route('/exam', methods=['POST'])
 def create_exam():
+    
     json_data = request.json
     instructor = json_data['instructor']
     name = json_data['name']
@@ -96,6 +102,7 @@ def create_exam():
 
 @app.route('/exam', methods=['GET'])
 def get_exams():
+    
     return {
         "result": [{'id': id(exam), 'name': exam.name, 'instructor': exam.instructor,
                     'examinee': str([item.name for item in exam.examinee])}
@@ -104,6 +111,7 @@ def get_exams():
 
 @app.route('/exam/<exam_id>', methods=['GET'])
 def get_exam(exam_id):
+    
     exam = find_exam_by_id(exams, exam_id)
     if exam:
         return exam.__dict__
@@ -113,6 +121,7 @@ def get_exam(exam_id):
 
 @app.route('/exam/<exam_id>/examinees', methods=['GET'])
 def get_examinees(exam_id):
+    
     exam = find_exam_by_id(exams, exam_id)
     if exam:
         return {'result': [examinee.__dict__ for examinee in exam.examinee]}
@@ -122,6 +131,7 @@ def get_examinees(exam_id):
 
 @app.route('/exam/<exam_id>/join', methods=['POST'])
 def join_exam(exam_id):
+    
     exam = find_exam_by_id(exams, exam_id)
     if exam:
         json_data = request.json
@@ -133,6 +143,7 @@ def join_exam(exam_id):
 
 
 def find_exam_by_id(exams, exam_id):
+    
     print(exams)
     for exam in exams:
         print(f'{id(exam)} == {exam_id} | {id(exam) == exam_id}')
@@ -141,6 +152,7 @@ def find_exam_by_id(exams, exam_id):
 
 
 def find_client_by_socketid(clients, socket_id):
+    
     for student in clients:
         if student.session_id == socket_id:
             return student
