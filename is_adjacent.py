@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 
 
 def is_adjacent(sound, makefreq, f, makedb):
+    
     fs, data = scipy.io.wavfile.read(sound)
 
     # print(fs, data)
