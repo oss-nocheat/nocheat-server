@@ -1,12 +1,12 @@
 Coding convention rule for python
 ==================================
-follows PEP 8 python style guid
+follows PEP 8 python style guide
 
 # 1. Code Lay-out
 ----------------
 ## Indentation
-Use 4 spaces per indentation level
-Continuation lines should align wrapped elements either vertically using Python's implicit line joining inside parentheses, brackets and braces, or using a hanging indent [7]. When using a hanging indent the following should be considered; there should be no arguments on the first line and further indentation should be used to clearly distinguish itself as a continuation line
+Use 4 spaces per indentation level.
+Continuation lines should align wrapped elements either vertically using Python's implicit line joining inside parentheses, brackets and braces, or using a hanging indent. When using a hanging indent the following should be considered; there should be no arguments on the first line and further indentation should be used to clearly distinguish itself as a continuation line
 
 ## Maximum Line Length
 Limit all lines to a maximum of 79 characters.
