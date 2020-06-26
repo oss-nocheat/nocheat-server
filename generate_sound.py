@@ -5,18 +5,20 @@ import pylab
 from scipy.io.wavfile import write
 
 def pprint(arr):
+    
     print("type:{}".format(type(arr)))
     print("shape: {}, dimension: {}, dtype:{}".format(arr.shape, arr.ndim, arr.dtype))
     print("Array's Data:\n", arr)
 
 def makeSound(key):
-    # sound_count: 소리의 개수! int형
-    # sound_size: 소리의 크기 비율! list형
-    # sound_hz: 소리의 주파수! list형
-    # result: 위 세개를 순서대로 넣은 output 값
-    # makeSound 함수: 1개의 output 소리를 만들때 필요한 정보를 생성함
-    # input-key(string): 해시 암호화의 키값으로 쓰일 값
-    # output- result(list): 2차원 리스트. list[0]: 소리의 개수(int), list[1]:소리의 크기비율(list), list[2]: 소리의 주파수(list)
+    
+    # sound_count: 소리의 개수, int형이다.
+    # sound_size: 소리의 크기 비율! list형이다.
+    # sound_hz: 소리의 주파수! list형이다.
+    # result: 위 세개를 순서대로 넣은 output 값이다.
+    # makeSound 함수: 1개의 output 소리를 만들때 필요한 정보를 생성한다.
+    # input-key(string): 해시 암호화의 키값으로 쓰일 값이다.
+    # output- result(list): 2차원 리스트. list[0]: 소리의 개수(int), list[1]:소리의 크기비율(list), list[2]: 소리의 주파수(list)이다.
 
     sound_size_ratio = []
     sound_hz = []
@@ -25,7 +27,7 @@ def makeSound(key):
     where = 8
     num = 0
 
-    # hashr-sha256 hash 변환 결과
+    # hashr-sha256 hash 변환 결과이다.
     hashr = hashlib.sha256(key.encode())
     hashr = hashr.hexdigest()
     hashr = int(hashr, 16)
@@ -56,6 +58,7 @@ def makeSound(key):
 
 
 def generate_sound():
+    
     list = makeSound("opensource_choi")
 
     # sampling rate
@@ -71,11 +74,11 @@ def generate_sound():
 
     print(list[1])
 
-    # to make sinwaves
+    # To make sinwaves
     for i in range(0, list[0]):
         arr[i] = np.sin(2 * np.pi * list[2][i] * t)
 
-    # to combine sinwaves
+    # To combine sinwaves
     signal = 0
     for i in range(0, list[0]):
         signal = signal + list[1][i] * arr[i]
@@ -90,11 +93,11 @@ def generate_sound():
     pylab.xlim(0, Fs / 2)
     pylab.show()
 
-    # save as wav file
+    # Save as wav file
     scaled = np.int16(signal / np.max(np.abs(signal)) * 32767)
     write('signal_gnak.wav', 44100, scaled)
 
     return list
 
-    # play wav file
+    # Play wav file
     # os.system("start signal.wav")
