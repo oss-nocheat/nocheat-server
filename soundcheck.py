@@ -5,14 +5,17 @@ import os
 
 
 class Soundcheck:
+    
     cnt = 0
     cheatcnt = 0
 
     def __init__(self):
+        
         self.cnt = 0
         self.cheatcnt = 0
 
     def soundanalysis(self, freq, signal_f, makefreq, makedb):
+        
         flag = -1
         dbsum = 0
         datacnt = 0
@@ -56,11 +59,14 @@ class Soundcheck:
                 self.cheatcnt += 1
 
     def cntzero(self):
+        
         self.cnt = 0
 
     def cntvalue(self):
+        
         return self.cnt
 
     def cheatcntvalue(self):
+        
         return self.cheatcnt
 
