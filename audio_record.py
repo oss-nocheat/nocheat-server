@@ -7,6 +7,7 @@ from soundcheck import Soundcheck
 
 
 def find_mic_index():
+    
     po = pyaudio.PyAudio()
     for index in range(po.get_device_count()):
         desc = po.get_device_info_by_index(index)
@@ -18,6 +19,7 @@ Hz_db = [10, 100, 10000, 1]
 
 
 def record():
+    
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
     RATE = 44100
